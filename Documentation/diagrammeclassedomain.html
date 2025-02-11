@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navbar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #E5E7EB;
+        }
+        .navbar {
+            background-color: #1F2937;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .navbar .title {
+            color: #F9FAFB;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .navbar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+        .navbar li {
+            margin-left: 20px;
+        }
+        .navbar a {
+            color: #F9FAFB;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 5px 10px;
+            transition: background 0.3s, border-radius 0.3s;
+        }
+        .navbar a:hover {
+            background: rgba(249, 250, 251, 0.2);
+            border-radius: 5px;
+        }
+        .content {
+            text-align: center;
+            padding: 40px 20px;
+            color: #1F2937;
+            font-size: 22px;
+            font-weight: bold;
+        }
+        .content p:first-child {
+            font-size: 28px;
+            color: #111827;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .content p {
+            font-size: 20px;
+            color: #374151;
+            line-height: 1.5;
+        }
+        .image-container {
+            width: 100%;
+            height: 120%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #D1D5DB;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .image-container img {
+            max-width: 100%;
+            max-height: 120%;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="title"><a href="./home.html">Documentation</a></div>
+    <ul>
+        <li><a href="./diagrammeclasse.html">Diagramme de Classe</a></li>
+        <li><a href="./architecture.html">Architecture Microservice</a></li>
+        <li><a href="./diagrammeclassedomain.html">Diagramme de Classe par Domaine</a></li>
+    </ul>
+</nav>
+
+<div class="image-container">
+    <img src="./images/diag%20classe%20domain.png" alt="Diagram Image" width="80%" height="120%">
+</div>
+</body>
+</html>
