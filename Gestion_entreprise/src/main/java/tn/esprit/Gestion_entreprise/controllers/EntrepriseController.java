@@ -1,7 +1,8 @@
-package tn.esprit.Gestion_entreprise;
+package tn.esprit.Gestion_entreprise.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import tn.esprit.Gestion_entreprise.entities.Entreprise;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
 @RequestMapping("/companies")
 public class EntrepriseController {
     @Autowired
-    private EntrepriseService EntrepriseService;
+    private tn.esprit.Gestion_entreprise.services.EntrepriseService EntrepriseService;
 
     @GetMapping
     public List<Entreprise> getAllCompanies() {
@@ -26,7 +27,7 @@ public class EntrepriseController {
         return EntrepriseService.saveCompany(company);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteCompany(@PathVariable Long id) {
         EntrepriseService.deleteCompany(id);
     }

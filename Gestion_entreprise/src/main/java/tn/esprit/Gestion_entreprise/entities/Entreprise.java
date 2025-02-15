@@ -1,8 +1,8 @@
-package tn.esprit.Gestion_entreprise;
+package tn.esprit.Gestion_entreprise.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-
 
 import java.util.List;
 
@@ -25,6 +25,7 @@ public class Entreprise {
     private String logo;
 
 
-//    @OneToMany(mappedBy = "Entreprise", cascade = CascadeType.ALL)
-//    private List<Offre> offres;
+    @OneToMany(mappedBy = "entreprise", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Offre> offres;
 }
