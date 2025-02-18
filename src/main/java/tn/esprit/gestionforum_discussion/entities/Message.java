@@ -7,22 +7,20 @@ import jakarta.persistence.Id;
 import java.util.Date;
 
 @Entity
-public class Comment {
+public class Message {
     @Id
     @GeneratedValue
     private Long id;
     private String content;
-    private int likes;
-    private Date datePosted;
+    private Date dateCreated;
 
-    public Comment() {
+    public Message() {
     }
 
-    public Comment(Long id, String content, int likes, Date datePosted) {
+    public Message(Long id, String content, Date dateCreated) {
         this.id = id;
         this.content = content;
-        this.likes = likes;
-        this.datePosted = datePosted;
+        this.dateCreated = dateCreated;
     }
 
     public Long getId() {
@@ -41,19 +39,11 @@ public class Comment {
         this.content = content;
     }
 
-    public int getLikes() {
-        return likes;
+    public Date getDateCreated() {
+        return dateCreated;
     }
 
-    public void setLikes(int likes) {
-        this.likes = likes;
-    }
-
-    public Date getDatePosted() {
-        return datePosted;
-    }
-
-    public void setDatePosted(Date datePosted) {
-        this.datePosted = datePosted;
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 }

@@ -1,0 +1,9 @@
+package tn.esprit.gestionforum_discussion.repositories;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import tn.esprit.gestionforum_discussion.entities.Forum;
+
+@Repository
+public interface ForumRepository extends JpaRepository<Forum, Long> {
+}
