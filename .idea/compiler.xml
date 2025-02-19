@@ -10,13 +10,14 @@
         <module name="gateway" />
         <module name="eureka" />
       </profile>
-      <profile name="Annotation profile for GestionCourse" enabled="true">
+      <profile name="Annotation profile for gestion-paiement-notification" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
         </processorPath>
+        <module name="GestionReclammations" />
         <module name="GestionCourse" />
         <module name="gestion-paiement-notification" />
       </profile>
@@ -25,6 +26,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="GestionCourse" options="-parameters" />
+      <module name="GestionReclammations" options="-parameters" />
       <module name="eureka" options="-parameters" />
       <module name="gateway" options="-parameters" />
       <module name="gestion-paiement-notification" options="-parameters" />
