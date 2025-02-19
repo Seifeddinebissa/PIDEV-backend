@@ -1,6 +1,7 @@
 package tn.esprit.Gestion_entreprise.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.Gestion_entreprise.entities.Entreprise;
 
@@ -16,6 +17,12 @@ public class EntrepriseController {
     public List<Entreprise> getAllCompanies() {
         return EntrepriseService.getAllCompanies();
     }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Entreprise> updateCompany(@PathVariable Long id, @RequestBody Entreprise entreprise) {
+        Entreprise updatedEntreprise = EntrepriseService.updateCompany(id, entreprise);
+        return ResponseEntity.ok(updatedEntreprise);
+    }
+
 
     @GetMapping("/{id}")
     public Entreprise getCompanyById(@PathVariable Long id) {
