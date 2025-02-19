@@ -17,52 +17,48 @@ import java.util.Optional;
 public class CoursRestAPI {
 
 
-    @Autowired
-    private CoursService coursService;
+        @Autowired
+        private CoursService coursService;
 
-
-    @PostMapping("/ajouterCours")
-    public Cours ajouterCours(@RequestBody Cours c){
-        return coursService.ajouterCours(c);
-    }
-
-
-    // Mettre à jour un cours
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Cours> updateCours(@PathVariable Long id, @RequestBody Cours updatedCours) {
-        try {
-            return new ResponseEntity<>(coursService.updateCours(id, updatedCours), HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        // 1. Ajouter un cours
+        @PostMapping
+        public ResponseEntity<Cours> ajouterCours(@RequestBody Cours cours) {
+            Cours nouveauCours = coursService.ajouterCours(cours);
+            return ResponseEntity.status(HttpStatus.CREATED).body(nouveauCours);
         }
-    }
 
+        // 2. Récupérer un cours par ID
+        @GetMapping("/{id}")
+        public ResponseEntity<Cours> getCoursById(@PathVariable Long id) {
+            return coursService.getCoursById(id)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+        }
 
+        // 3. Récupérer tous les cours
+        @GetMapping
+        public ResponseEntity<List<Cours>> getAllCours() {
+            List<Cours> coursList = coursService.getAllCours();
+            return ResponseEntity.ok(coursList);
+        }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteCours(@PathVariable Long id) {
-        try {
+        // 4. Mettre à jour un cours
+        @PutMapping("/{id}")
+        public ResponseEntity<Cours> updateCours(@PathVariable Long id, @RequestBody Cours coursDetails) {
+            try {
+                Cours updatedCours = coursService.updateCours(id, coursDetails);
+                return ResponseEntity.ok(updatedCours);
+            } catch (RuntimeException e) {
+                return ResponseEntity.notFound().build();
+            }
+        }
+
+        // 5. Supprimer un cours
+        @DeleteMapping("/{id}")
+        public ResponseEntity<Void> deleteCours(@PathVariable Long id) {
             coursService.deleteCours(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.noContent().build();
         }
-    }
-
-    @GetMapping("/titre/{titre}")
-    public ResponseEntity<Cours> getCoursByTitre(@PathVariable String titre) {
-        Optional<Cours> cours = coursService.findByTitre(titre);
-        return cours.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
 
 
-
-
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Cours>> listCours(){
-        return new ResponseEntity<>(coursService.findAll(),
-                HttpStatus.OK);
-
-    }
 }

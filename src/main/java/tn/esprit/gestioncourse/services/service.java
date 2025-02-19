@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface service {
-    List<Cours> findAll();
-    Cours ajouterCours(Cours c);
-    void deleteCours(Long id);
-    Cours updateCours(Long id, Cours updatedCours);
-    Optional<Cours> findByTitre(String titre);
+    public Cours ajouterCours(Cours cours) ;
+    public Optional<Cours> getCoursById(Long id) ;
+    public List<Cours> getAllCours() ;
+    public Cours updateCours(Long id, Cours coursDetails) ;
+    public void deleteCours(Long id) ;
 }

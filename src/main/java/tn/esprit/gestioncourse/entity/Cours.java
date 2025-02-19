@@ -1,37 +1,44 @@
 package tn.esprit.gestioncourse.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.List;
+
+
 @Entity
 public class Cours {
     @Id
-    @GeneratedValue
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idCours;
     private String titre;
-    private String contenu;
-    private String image;
     private String description;
-    private String teacherName;
+    private String image;
+    private int enrollment ;
 
-    public Cours(Long id, String titre, String contenu, String image, String description, String teacherName) {
-        this.id = id;
-        this.titre = titre;
-        this.contenu = contenu;
-        this.image = image;
-        this.description = description;
-        this.teacherName = teacherName;
-    }
+    @ElementCollection
+    @CollectionTable(name = "cours_contenu", joinColumns = @JoinColumn(name = "idCours"))
+    @Column(name = "contenu")
+    private List<String> contenu;
+
+    @ManyToOne
+    @JoinColumn(name = "idUser", nullable = false)  // Clé étrangère vers User
+    private User user;
+
+
+    @OneToMany(mappedBy = "cours", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Quiz> quizList;
+
 
     public Cours() {
     }
 
-    public long getId() {
-        return id;
+    public Long getIdCours() {
+        return idCours;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdCours(Long idCours) {
+        this.idCours = idCours;
     }
 
     public String getTitre() {
@@ -42,12 +49,12 @@ public class Cours {
         this.titre = titre;
     }
 
-    public String getContenu() {
-        return contenu;
+    public String getDescription() {
+        return description;
     }
 
-    public void setContenu(String contenu) {
-        this.contenu = contenu;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getImage() {
@@ -58,19 +65,48 @@ public class Cours {
         this.image = image;
     }
 
-    public String getDescription() {
-        return description;
+    public int getEnrollment() {
+        return enrollment;
     }
 
-    public void setDescription(String description) {
+    public void setEnrollment(int enrollment) {
+        this.enrollment = enrollment;
+    }
+
+    public List<String> getContenu() {
+        return contenu;
+    }
+
+    public void setContenu(List<String> contenu) {
+        this.contenu = contenu;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Quiz> getQuizList() {
+        return quizList;
+    }
+
+    public void setQuizList(List<Quiz> quizList) {
+        this.quizList = quizList;
+    }
+
+    public Cours(Long idCours, String titre, String description, String image, int enrollment, List<String> contenu, User user, List<Quiz> quizList) {
+        this.idCours = idCours;
+        this.titre = titre;
         this.description = description;
-    }
-
-    public String getTeacherName() {
-        return teacherName;
-    }
-
-    public void setTeacherName(String teacherName) {
-        this.teacherName = teacherName;
+        this.image = image;
+        this.enrollment = enrollment;
+        this.contenu = contenu;
+        this.user = user;
+        this.quizList = quizList;
     }
 }
+
+

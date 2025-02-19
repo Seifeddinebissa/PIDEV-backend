@@ -13,47 +13,49 @@ import java.util.Optional;
 @Slf4j
 public class CoursService implements service{
 
-    @Autowired
-    private CoursRepository coursRepository;
 
-    @Override
-    public List<Cours> findAll() {
-        return coursRepository.findAll();
-    }
 
-    @Override
-    public Cours ajouterCours(Cours c) {
-        return coursRepository.save(c);
-    }
+        @Autowired
+        private CoursRepository coursRepository;
 
+        // 1. Ajouter un cours
     @Override
-    public Optional<Cours> findByTitre(String titre) {
-        return coursRepository.findByTitre(titre);
-    }
-
-    @Override
-    public void deleteCours(Long id) {
-        if (coursRepository.existsById(id)) {
-            coursRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("Cours non trouvé");
-        }
-    }
-
-    @Override
-    public Cours updateCours(Long id, Cours updatedCours) {
-        return coursRepository.findById(id).map(cours -> {
-            cours.setTitre(updatedCours.getTitre());
-            cours.setContenu(updatedCours.getContenu());
-            cours.setImage(updatedCours.getImage());
-            cours.setDescription(updatedCours.getDescription());
-            cours.setTeacherName(updatedCours.getTeacherName());
+        public Cours ajouterCours(Cours cours) {
             return coursRepository.save(cours);
-        }).orElseThrow(() -> new RuntimeException("Cours non trouvé"));
-    }
+        }
+
+        // 2. Récupérer un cours par son ID
+    @Override
+        public Optional<Cours> getCoursById(Long id) {
+            return coursRepository.findById(id);
+        }
 
 
 
+        // 3. Récupérer tous les cours
+        @Override
+        public List<Cours> getAllCours() {
+            return coursRepository.findAll();
+        }
+
+        // 4. Mettre à jour un cours
+        @Override
+        public Cours updateCours(Long id, Cours coursDetails) {
+            return coursRepository.findById(id).map(cours -> {
+                cours.setTitre(coursDetails.getTitre());
+                cours.setDescription(coursDetails.getDescription());
+                cours.setImage(coursDetails.getImage());
+                cours.setEnrollment(coursDetails.getEnrollment());
+                cours.setContenu(coursDetails.getContenu());
+                return coursRepository.save(cours);
+            }).orElseThrow(() -> new RuntimeException("Cours non trouvé avec ID : " + id));
+        }
+
+        // 5. Supprimer un cours
+        @Override
+        public void deleteCours(Long id) {
+            coursRepository.deleteById(id);
+        }
 
 
 }
