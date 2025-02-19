@@ -10,7 +10,7 @@ import tn.esprit.Gestion_entreprise.entities.Offre;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/offres")
+@RequestMapping("/offres")
 @RequiredArgsConstructor
 public class OffreController {
 
