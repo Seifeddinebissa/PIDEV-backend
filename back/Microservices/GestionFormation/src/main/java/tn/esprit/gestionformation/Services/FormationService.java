@@ -35,8 +35,16 @@ public class FormationService {
             formation.setDescription(updatedFormation.getDescription());
             formation.setDuration(updatedFormation.getDuration());
             formation.setIs_public(updatedFormation.isIs_public());
+            formation.setPrice(updatedFormation.getPrice());
             return formationRepository.save(formation);
         }).orElse(null);
     }
 
+    public int getFeedbackCountByFormation(int id) {
+        Formation formation = formationRepository.findById(id).orElse(null);
+        if (formation != null) {
+            return formation.getFeedbacks().size();
+        }
+        return 0;
+    }
 }

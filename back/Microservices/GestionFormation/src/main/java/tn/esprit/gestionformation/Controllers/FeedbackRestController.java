@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/feedbacks")
+@CrossOrigin(origins = "http://localhost:4200")
 public class FeedbackRestController {
 
     @Autowired
@@ -34,9 +35,9 @@ public class FeedbackRestController {
 
     // Create new feedback
     @PostMapping
-    public Feedback createFeedback(@RequestBody Feedback feedback, @RequestParam int formationId) {
+    public Feedback createFeedback(@RequestBody Feedback feedback, @RequestParam int formation_id) {
         // Get the Formation by ID
-        Formation formation = formationService.getFormationById(formationId);
+        Formation formation = formationService.getFormationById(formation_id);
 
         if (formation != null) {
             // Set the formation to feedback
@@ -49,7 +50,7 @@ public class FeedbackRestController {
     }
 
     // Delete feedback by ID
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public void deleteFeedback(@PathVariable int id) {
         feedbackService.deleteFeedback(id);
     }

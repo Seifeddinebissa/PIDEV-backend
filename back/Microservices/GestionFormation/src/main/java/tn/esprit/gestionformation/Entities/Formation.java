@@ -32,6 +32,17 @@ public class Formation {
     private int duration;
     private boolean is_public;
 
+    @Min(value = 0, message = "Price must be at least 0")
+    private double price;  // Nouveau champ ajouté
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy="formation")
     private List<Feedback> Feedbacks;
 
@@ -52,16 +63,18 @@ public class Formation {
                 ", description='" + description + '\'' +
                 ", duration=" + duration +
                 ", is_public=" + is_public +
+                ", price=" + price +
                 '}';
     }
 
-    public Formation(int id, String image, String title, String description, int duration, boolean is_public) {
+    public Formation(int id, String image, String title, String description, int duration, boolean is_public, double price) {
         this.id = id;
         this.image = image;
         this.title = title;
         this.description = description;
         this.duration = duration;
         this.is_public = is_public;
+        this.price = price;
     }
 
 
