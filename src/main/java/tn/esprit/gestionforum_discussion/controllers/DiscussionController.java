@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.gestionforum_discussion.entities.Discussion;
-import tn.esprit.gestionforum_discussion.entities.Forum;
 import tn.esprit.gestionforum_discussion.services.DiscussionService;
 
 import java.util.List;

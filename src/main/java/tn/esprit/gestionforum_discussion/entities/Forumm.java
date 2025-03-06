@@ -2,33 +2,34 @@ package tn.esprit.gestionforum_discussion.entities;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
-public class Forum {
+public class Forumm {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private  String title;
+    private String title;
     private String content;
     private int likes;
-    private Date datePosted;
-    @OneToMany(cascade = CascadeType.ALL)
-    private Set<Publication> Publications;
+    private String image;
 
-    public Forum() {
+    private LocalDate datePosted;
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<Commentaire> commentaires;
+
+    public Forumm() {
     }
 
-
-
-    public Forum(Long id, String title, String content, int likes, Date datePosted, Set<Publication> publications) {
+    public Forumm(Long id, String title, String content, int likes, String image, LocalDate datePosted, Set<Commentaire> commentaires) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.likes = likes;
+        this.image = image;
         this.datePosted = datePosted;
-
+        this.commentaires = commentaires;
     }
 
     public Long getId() {
@@ -63,19 +64,28 @@ public class Forum {
         this.likes = likes;
     }
 
-    public Date getDatePosted() {
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public LocalDate getDatePosted() {
         return datePosted;
     }
 
-    public void setDatePosted(Date datePosted) {
+    public void setDatePosted(LocalDate datePosted) {
         this.datePosted = datePosted;
     }
 
-    public Set<Publication> getPublications() {
-        return Publications;
+
+    public Set<Commentaire> getComments() {
+        return commentaires;
     }
 
-    public void setPublications(Set<Publication> publications) {
-        Publications = publications;
+    public void setComments(Set<Commentaire> commentaires) {
+        this.commentaires = commentaires;
     }
 }
