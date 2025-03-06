@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface CoursRepository extends JpaRepository<Cours,Long> {
 
+    Optional<Cours> findByTitre(String titre);
+
 }

@@ -1,5 +1,6 @@
 package tn.esprit.gestioncourse.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -18,9 +19,11 @@ public class Quiz {
     private Cours cours;
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Question> questions;
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ScoreQuiz> scores;
 
 

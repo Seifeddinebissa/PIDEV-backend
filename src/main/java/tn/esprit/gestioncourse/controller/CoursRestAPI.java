@@ -1,64 +1,157 @@
 package tn.esprit.gestioncourse.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.gestioncourse.entity.Cours;
 import tn.esprit.gestioncourse.services.CoursService;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-
 
 @RestController
 @RequestMapping("/cours")
+@CrossOrigin(origins = "http://localhost:4200")
 public class CoursRestAPI {
 
+    private static final String UPLOAD_DIR = "/Users/dorraamri/Desktop/uploads/";
 
-        @Autowired
-        private CoursService coursService;
+    @Autowired
+    private CoursService coursService;
 
-        // 1. Ajouter un cours
-        @PostMapping
-        public ResponseEntity<Cours> ajouterCours(@RequestBody Cours cours) {
-            Cours nouveauCours = coursService.ajouterCours(cours);
-            return ResponseEntity.status(HttpStatus.CREATED).body(nouveauCours);
+    @PostMapping(value = "/add", consumes = "multipart/form-data")
+    public ResponseEntity<Cours> ajouterCours(
+            @RequestParam("titre") String titre,
+            @RequestParam("description") String description,
+            @RequestParam(value = "image", required = false) MultipartFile image,
+            @RequestParam(value = "pdfs", required = false) List<MultipartFile> pdfs) {
+
+        String imageUrl = saveImage(image);
+        Cours cours = new Cours();
+        cours.setTitre(titre);
+        cours.setDescription(description);
+        cours.setImage(imageUrl);
+        List<String> contenu = savePdfs(pdfs);
+        cours.setContenu(contenu);
+
+        Cours savedCours = coursService.ajouterCours(cours);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedCours);
+    }
+
+    private String saveImage(MultipartFile image) {
+        if (image == null || image.isEmpty()) {
+            return null;
         }
 
-        // 2. Récupérer un cours par ID
-        @GetMapping("/{id}")
-        public ResponseEntity<Cours> getCoursById(@PathVariable Long id) {
-            return coursService.getCoursById(id)
-                    .map(ResponseEntity::ok)
-                    .orElse(ResponseEntity.notFound().build());
+        try {
+            String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+            Path filePath = Paths.get(UPLOAD_DIR, fileName);
+            Files.createDirectories(filePath.getParent());
+            image.transferTo(filePath.toFile());
+            System.out.println("Image saved at: " + filePath.toAbsolutePath());
+            return "http://localhost:8088/dorra/uploads/" + fileName; // Assurez-vous que 8088 est correct
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload image", e);
+        }
+    }
+
+    private List<String> savePdfs(List<MultipartFile> pdfs) {
+        if (pdfs == null || pdfs.isEmpty()) {
+            return Collections.emptyList();
         }
 
-        // 3. Récupérer tous les cours
-        @GetMapping
-        public ResponseEntity<List<Cours>> getAllCours() {
-            List<Cours> coursList = coursService.getAllCours();
-            return ResponseEntity.ok(coursList);
-        }
-
-        // 4. Mettre à jour un cours
-        @PutMapping("/{id}")
-        public ResponseEntity<Cours> updateCours(@PathVariable Long id, @RequestBody Cours coursDetails) {
-            try {
-                Cours updatedCours = coursService.updateCours(id, coursDetails);
-                return ResponseEntity.ok(updatedCours);
-            } catch (RuntimeException e) {
-                return ResponseEntity.notFound().build();
+        List<String> pdfUrls = new ArrayList<>();
+        try {
+            for (MultipartFile pdf : pdfs) {
+                if (!pdf.isEmpty()) {
+                    String fileName = System.currentTimeMillis() + "_" + pdf.getOriginalFilename();
+                    Path filePath = Paths.get(UPLOAD_DIR, fileName);
+                    Files.createDirectories(filePath.getParent());
+                    pdf.transferTo(filePath.toFile());
+                    String pdfUrl = "http://localhost:8088/dorra/uploads/" + fileName;
+                    pdfUrls.add(pdfUrl);
+                }
             }
+            return pdfUrls;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload PDFs", e);
+        }
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<List<Cours>> getAllCours() {
+        return ResponseEntity.ok(coursService.getAllCours());
+    }
+
+    @GetMapping("/get/{idCours}")
+    public ResponseEntity<Cours> getCoursById(@PathVariable Long idCours) {
+        Cours cours = coursService.getCoursById(idCours)
+                .orElseThrow(() -> new RuntimeException("Cours non trouvé"));
+        return ResponseEntity.ok(cours);
+    }
+
+    @PutMapping(value = "/update/{idCours}", consumes = "multipart/form-data")
+    public ResponseEntity<Cours> updateCours(
+            @PathVariable Long idCours,
+            @RequestParam("titre") String titre,
+            @RequestParam("description") String description,
+            @RequestParam(value = "image", required = false) MultipartFile image,
+            @RequestParam(value = "pdfs", required = false) List<MultipartFile> pdfs,
+            @RequestParam(value = "contenu", required = false) String contenuJson) {
+
+        Cours cours = coursService.getCoursById(idCours)
+                .orElseThrow(() -> new RuntimeException("Cours non trouvé"));
+
+        cours.setTitre(titre);
+        cours.setDescription(description);
+
+        if (image != null && !image.isEmpty()) {
+            String imageUrl = saveImage(image);
+            cours.setImage(imageUrl);
         }
 
-        // 5. Supprimer un cours
-        @DeleteMapping("/{id}")
-        public ResponseEntity<Void> deleteCours(@PathVariable Long id) {
-            coursService.deleteCours(id);
-            return ResponseEntity.noContent().build();
+        List<String> updatedContenu = new ArrayList<>();
+        if (contenuJson != null && !contenuJson.isEmpty()) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                updatedContenu = mapper.readValue(contenuJson, new TypeReference<List<String>>() {});
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException("Erreur lors de la désérialisation de contenuJson", e);
+            }
+        } else {
+            updatedContenu = cours.getContenu() != null ? new ArrayList<>(cours.getContenu()) : new ArrayList<>();
         }
 
+        if (pdfs != null && !pdfs.isEmpty()) {
+            List<String> newPdfs = savePdfs(pdfs);
+            updatedContenu.addAll(newPdfs);
+        }
 
+        cours.setContenu(updatedContenu);
+        Cours updatedCours = coursService.updateCours(cours); // Appel corrigé
+        return ResponseEntity.ok(updatedCours);
+    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteCours(@PathVariable Long id) {
+        coursService.deleteCours(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
+    @GetMapping("/byTitre")
+    public ResponseEntity<Cours> getCoursByTitre(@RequestParam String titre) {
+        return coursService.findByTitre(titre)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

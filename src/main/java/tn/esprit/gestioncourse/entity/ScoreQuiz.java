@@ -1,33 +1,38 @@
 package tn.esprit.gestioncourse.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
 public class ScoreQuiz {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // S'assurer que cette colonne est la seule AUTO_INCREMENT
+    private Long idScoreQuiz;
 
     private int score;
 
+    private boolean isTimedOut;
+
     @ManyToOne
-    @JoinColumn(name = "id_user")
+    @JoinColumn(name = "idUser", nullable = false)  // Assurer que la clé étrangère n'est pas nulle
+    @JsonIgnore
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "id_quiz")
+    @JoinColumn(name = "idQuiz", nullable = false)  // Assurer que la clé étrangère n'est pas nulle
+    @JsonIgnore
     private Quiz quiz;
 
 
     public ScoreQuiz() {
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdScoreQuiz() {
+        return idScoreQuiz;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdScoreQuiz(Long idScoreQuiz) {
+        this.idScoreQuiz = idScoreQuiz;
     }
 
     public int getScore() {
@@ -36,6 +41,14 @@ public class ScoreQuiz {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public boolean isTimedOut() {
+        return isTimedOut;
+    }
+
+    public void setTimedOut(boolean timedOut) {
+        isTimedOut = timedOut;
     }
 
     public User getUser() {
@@ -54,9 +67,11 @@ public class ScoreQuiz {
         this.quiz = quiz;
     }
 
-    public ScoreQuiz(Long id, int score, User user, Quiz quiz) {
-        this.id = id;
+
+    public ScoreQuiz(Long idScoreQuiz, int score, boolean isTimedOut, User user, Quiz quiz) {
+        this.idScoreQuiz = idScoreQuiz;
         this.score = score;
+        this.isTimedOut = isTimedOut;
         this.user = user;
         this.quiz = quiz;
     }

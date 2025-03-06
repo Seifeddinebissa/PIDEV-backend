@@ -1,5 +1,6 @@
 package tn.esprit.gestioncourse.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,14 +20,17 @@ public class Cours {
     @ElementCollection
     @CollectionTable(name = "cours_contenu", joinColumns = @JoinColumn(name = "idCours"))
     @Column(name = "contenu")
+
     private List<String> contenu;
 
     @ManyToOne
     @JoinColumn(name = "idUser", nullable = false)  // Clé étrangère vers User
+    @JsonIgnore
     private User user;
 
 
     @OneToMany(mappedBy = "cours", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Quiz> quizList;
 
 
