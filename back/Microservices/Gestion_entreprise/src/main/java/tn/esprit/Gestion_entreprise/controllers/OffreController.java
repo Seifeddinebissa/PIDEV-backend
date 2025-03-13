@@ -102,5 +102,11 @@ public class OffreController {
     public List<Application> getApplications(@RequestParam Long studentId) {
         return offreService.getApplicationsByStudentId(studentId);
     }
+    @GetMapping("/favorites/analytics")
+    public ResponseEntity<List<OffreService.FavoriteStats>> getFavoriteAnalytics(
+            @RequestParam(value = "limit", defaultValue = "5") int limit
+    ) {
+        return ResponseEntity.ok(offreService.getFavoriteAnalytics(limit));
+    }
 
 }

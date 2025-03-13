@@ -189,5 +189,24 @@ public class OffreService {
             throw new EntityNotFoundException("Entreprise not found with id: " + entrepriseId);
         }
     }
+    public List<FavoriteStats> getFavoriteAnalytics(int limit) {
+        return FavoriteRepo.findTopFavoritedOffers().stream()
+                .limit(limit)
+                .map(result -> new FavoriteStats((Offre) result[0], ((Long) result[1]).intValue()))
+                .collect(Collectors.toList());
+    }
+
+    public static class FavoriteStats {
+        private final Offre offre;
+        private final int favoriteCount;
+
+        public FavoriteStats(Offre offre, int favoriteCount) {
+            this.offre = offre;
+            this.favoriteCount = favoriteCount;
+        }
+
+        public Offre getOffre() { return offre; }
+        public int getFavoriteCount() { return favoriteCount; }
+    }
 
 }

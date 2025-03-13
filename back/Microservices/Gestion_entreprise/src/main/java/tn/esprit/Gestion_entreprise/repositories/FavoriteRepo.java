@@ -19,6 +19,8 @@ public interface FavoriteRepo extends JpaRepository<Favorite, Long> {
     @Query("DELETE FROM Favorite f WHERE f.studentId = :studentId AND f.offre.id = :offerId")
     void deleteByStudentIdAndOffreId(@Param("studentId") Long studentId, @Param("offerId") Long offerId);
 
+    @Query("SELECT f.offre, COUNT(f) as count FROM Favorite f GROUP BY f.offre ORDER BY count DESC")
+    List<Object[]> findTopFavoritedOffers();
 
 
 }

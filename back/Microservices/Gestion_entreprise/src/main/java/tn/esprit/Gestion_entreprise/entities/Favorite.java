@@ -15,7 +15,7 @@ public class Favorite {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long studentId; // Static student ID
+    private Long studentId;
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
