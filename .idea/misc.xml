@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/Microservices/GestionCourse/pom.xml" />
+        <option value="$PROJECT_DIR$/Microservices/gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/Microservices/eureka/pom.xml" />
+        <option value="$PROJECT_DIR$/back/gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/back/eureka/pom.xml" />
+        <option value="$PROJECT_DIR$/back/Microservices/gestion-paiement-notification/pom.xml" />
+        <option value="$PROJECT_DIR$/back/Microservices/GestionCourse/pom.xml" />
+        <option value="$PROJECT_DIR$/back/Microservices/Gestion_entreprise/pom.xml" />
+      </list>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17 (3)" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
