@@ -11,6 +11,7 @@ import tn.esprit.gestionformation.Services.FeedbackService;
 import tn.esprit.gestionformation.Services.FormationService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/feedbacks")
@@ -70,5 +71,11 @@ public class FeedbackRestController {
     public ResponseEntity<List<Feedback>> getNonHiddenFeedbacksByFormation(@PathVariable int formationId) {
         List<Feedback> feedbacks = feedbackService.getNonHiddenFeedbacksByFormationId(formationId);
         return ResponseEntity.ok(feedbacks);
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<List<Map<String, Object>>> getAllFormationsFeedbackStats() {
+        List<Map<String, Object>> stats = feedbackService.getAllFormationsFeedbackStats();
+        return ResponseEntity.ok(stats);
     }
 }
