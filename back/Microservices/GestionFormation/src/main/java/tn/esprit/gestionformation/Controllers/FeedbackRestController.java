@@ -2,7 +2,9 @@ package tn.esprit.gestionformation.Controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tn.esprit.gestionformation.Config.EmailService; // Ajout de l’import
 import tn.esprit.gestionformation.Entities.Feedback;
 import tn.esprit.gestionformation.Entities.Formation;
 import tn.esprit.gestionformation.Services.FeedbackService;
@@ -21,35 +23,39 @@ public class FeedbackRestController {
     @Autowired
     private FormationService formationService;
 
-    // Get all feedbacks
+    @Autowired
+    private EmailService emailService; // Injection du service Email
+
     @GetMapping
     public List<Feedback> getAllFeedbacks() {
         return feedbackService.getAllFeedbacks();
     }
 
-    // Get feedback by ID
     @GetMapping("/{id}")
     public Feedback getFeedbackById(@PathVariable int id) {
         return feedbackService.getFeedbackById(id);
     }
 
-    // Create new feedback
     @PostMapping
     public Feedback createFeedback(@RequestBody Feedback feedback, @RequestParam int formation_id) {
-        // Get the Formation by ID
         Formation formation = formationService.getFormationById(formation_id);
-
         if (formation != null) {
-            // Set the formation to feedback
             feedback.setFormation(formation);
-            return feedbackService.saveFeedback(feedback);
-        }
+            Feedback savedFeedback = feedbackService.saveFeedback(feedback);
 
-        // If formation doesn't exist, return null or throw exception (you can adjust based on your preference)
+            // Envoi de l’email après ajout du feedback
+            String subject = "Nouveau commentaire sur " + formation.getTitle();
+            String text = "Un nouveau feedback a été ajouté :\n\n" +
+                    "Note : " + savedFeedback.getRating() + "/5\n" +
+                    "Commentaire : " + savedFeedback.getComment() + "\n" +
+                    "Date : " + savedFeedback.getDate();
+            emailService.sendEmail("bennarimohamed8@gmail.com", subject, text);
+
+            return savedFeedback;
+        }
         return null;
     }
 
-    // Delete feedback by ID
     @DeleteMapping("/{id}")
     public void deleteFeedback(@PathVariable int id) {
         feedbackService.deleteFeedback(id);
@@ -58,5 +64,11 @@ public class FeedbackRestController {
     @PutMapping("/{id}")
     public Feedback updateFeedback(@PathVariable int id, @RequestBody Feedback feedback) {
         return feedbackService.updateFeedback(id, feedback);
+    }
+
+    @GetMapping("/formation/{formationId}/non-hidden")
+    public ResponseEntity<List<Feedback>> getNonHiddenFeedbacksByFormation(@PathVariable int formationId) {
+        List<Feedback> feedbacks = feedbackService.getNonHiddenFeedbacksByFormationId(formationId);
+        return ResponseEntity.ok(feedbacks);
     }
 }

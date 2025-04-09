@@ -13,22 +13,18 @@ public class FeedbackService {
     @Autowired
     private FeedbackRepository feedbackRepository;
 
-    // Get all feedbacks
     public List<Feedback> getAllFeedbacks() {
         return feedbackRepository.findAll();
     }
 
-    // Get feedback by ID
     public Feedback getFeedbackById(int id) {
         return feedbackRepository.findById(id).orElse(null);
     }
 
-    // Save feedback (create or update)
     public Feedback saveFeedback(Feedback feedback) {
         return feedbackRepository.save(feedback);
     }
 
-    // Delete feedback by ID
     public void deleteFeedback(int id) {
         feedbackRepository.deleteById(id);
     }
@@ -38,7 +34,16 @@ public class FeedbackService {
             feedback.setRating(updatedFeedback.getRating());
             feedback.setComment(updatedFeedback.getComment());
             feedback.setDate(updatedFeedback.getDate());
+            feedback.setIs_hidden(updatedFeedback.isIs_hidden());
             return feedbackRepository.save(feedback);
         }).orElse(null);
     }
+
+
+    // Updated to match repository method
+    public List<Feedback> getNonHiddenFeedbacksByFormationId(int formationId) {
+        return feedbackRepository.findNonHiddenByFormationId(formationId);
+    }
+
+
 }

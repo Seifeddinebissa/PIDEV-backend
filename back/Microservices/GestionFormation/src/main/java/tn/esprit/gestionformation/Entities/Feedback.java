@@ -2,7 +2,6 @@ package tn.esprit.gestionformation.Entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -30,6 +29,28 @@ public class Feedback {
     @ManyToOne
     @JsonIgnore
     Formation formation;
+
+    // New attribute: is_hidden
+    private boolean is_hidden;
+
+    public Feedback() {
+    }
+
+    public Feedback(int id, int rating, String comment, Date date) {
+        this.id = id;
+        this.rating = rating;
+        this.comment = comment;
+        this.date = date;
+    }
+
+    public Feedback(int id, int rating, String comment, Date date, Formation formation, boolean is_hidden) {
+        this.id = id;
+        this.rating = rating;
+        this.comment = comment;
+        this.date = date;
+        this.formation = formation;
+        this.is_hidden = is_hidden;
+    }
 
     public int getId() {
         return id;
@@ -71,14 +92,13 @@ public class Feedback {
         this.formation = formation;
     }
 
-    public Feedback() {
+    // Getter and Setter for is_hidden
+    public boolean isIs_hidden() {
+        return is_hidden;
     }
 
-    public Feedback(int id, int rating, String comment, Date date) {
-        this.id = id;
-        this.rating = rating;
-        this.comment = comment;
-        this.date = date;
+    public void setIs_hidden(boolean is_hidden) {
+        this.is_hidden = is_hidden;
     }
 
     @Override
@@ -88,6 +108,7 @@ public class Feedback {
                 ", rating=" + rating +
                 ", comment='" + comment + '\'' +
                 ", date=" + date +
+                ", is_hidden=" + is_hidden +
                 '}';
     }
 }
