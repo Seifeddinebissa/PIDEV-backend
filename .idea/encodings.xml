@@ -4,8 +4,19 @@
     <file url="file://$PROJECT_DIR$/PIDEV-backend/Microservices/EureukaServer/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/PIDEV-backend/Microservices/GestionCourse/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/PIDEV-backend/Microservices/GestionEvents/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/PIDEV-backend/Microservices/GestionNotification/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/PIDEV-backend/Microservices/GestionUser/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/PIDEV-backend/Microservices/eureka/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/PIDEV-backend/Microservices/gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/PIDEV-backend/back/Microservices/GestionCourse/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/PIDEV-backend/back/Microservices/GestionEvents/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/PIDEV-backend/back/Microservices/GestionNotification/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/PIDEV-backend/back/Microservices/Gestion_entreprise/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/PIDEV-backend/back/Microservices/Useeer/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/PIDEV-backend/back/Microservices/User/Securit-SpringBoot/securitebackendspring-main/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/PIDEV-backend/back/Microservices/gestion-paiement-notification/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/PIDEV-backend/back/Microservices/gestion_user/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/PIDEV-backend/back/eureka/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/PIDEV-backend/back/gateway/src/main/java" charset="UTF-8" />
   </component>
 </project>

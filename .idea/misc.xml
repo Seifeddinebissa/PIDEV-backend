@@ -10,6 +10,18 @@
         <option value="$PROJECT_DIR$/PIDEV-backend/Microservices/EureukaServer/pom.xml" />
         <option value="$PROJECT_DIR$/PIDEV-backend/Microservices/gateway/pom.xml" />
         <option value="$PROJECT_DIR$/PIDEV-backend/Microservices/eureka/pom.xml" />
+        <option value="$PROJECT_DIR$/PIDEV-backend/Microservices/GestionNotification/pom.xml" />
+        <option value="$PROJECT_DIR$/PIDEV-backend/back/eureka/pom.xml" />
+        <option value="$PROJECT_DIR$/PIDEV-backend/back/gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/PIDEV-backend/back/Microservices/GestionEvents/pom.xml" />
+        <option value="$PROJECT_DIR$/PIDEV-backend/back/Microservices/GestionNotification/pom.xml" />
+        <option value="$PROJECT_DIR$/PIDEV-backend/back/Microservices/Gestion_entreprise/pom.xml" />
+        <option value="$PROJECT_DIR$/PIDEV-backend/back/Microservices/gestion-paiement-notification/pom.xml" />
+        <option value="$PROJECT_DIR$/PIDEV-backend/back/Microservices/GestionCourse/pom.xml" />
+        <option value="$PROJECT_DIR$/PIDEV-backend/back/Microservices/User/Securit-SpringBoot/securitebackendspring-main/pom.xml" />
+        <option value="$PROJECT_DIR$/PIDEV-backend/back/Microservices/Useeer/pom.xml" />
+        <option value="$PROJECT_DIR$/PIDEV-backend/back/Microservices/gestion_user/pom.xml" />
+        <option value="$PROJECT_DIR$/PIDEV-backend/back/Microservices/payment-paypal/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
@@ -19,7 +31,7 @@
       </set>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_23" default="true" project-jdk-name="openjdk-23 (2)" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_23" default="true" project-jdk-name="23" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
