@@ -13,7 +13,8 @@ public class Commentaire {
     private Long id;
     private String name;
     private String content;
-    private int likes;
+    private int likes = 0;    // Initialisé à 0 pour éviter des valeurs nulles
+    private int dislikes = 0;
     private Date datePosted;
 
     @ManyToOne
@@ -76,4 +77,17 @@ public class Commentaire {
     public void setName(String name) {
         this.name = name;
     }
+
+    public int getDislikes() {
+        return dislikes;
+    }
+
+    public void setDislikes(int dislikes) {
+        this.dislikes = dislikes;
+    }
+
+    public double getTotalLikesDislikes() {
+        return (this.likes + this.dislikes) / 2.0; // Différence entre likes et dislikes
+    }
 }
+

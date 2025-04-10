@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import tn.esprit.gestionforum_discussion.entities.Commentaire;
 import tn.esprit.gestionforum_discussion.services.CommentService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/comment")
@@ -41,4 +43,27 @@ public class CommentController {
         commentService.deleteComment(id);
         return new ResponseEntity<>("Comment deleted", HttpStatus.OK);
     }
+    // Nouveau endpoint pour liker un commentaire
+    @PostMapping("/{id}/like")
+    public ResponseEntity<Commentaire> likeComment(@PathVariable Long id) {
+        return new ResponseEntity<>(commentService.likeComment(id), HttpStatus.OK);
+    }
+
+    // Nouveau endpoint pour disliker un commentaire
+    @PostMapping("/{id}/dislike")
+    public ResponseEntity<Commentaire> dislikeComment(@PathVariable Long id) {
+        return new ResponseEntity<>(commentService.dislikeComment(id), HttpStatus.OK);
+    }
+    @GetMapping("/comments/stats/average")
+    public ResponseEntity<Map<String, Double>> getAverageStats() {
+        double averageLikes = commentService.getAverageLikes();
+        double averageDislikes = commentService.getAverageDislikes();
+
+        Map<String, Double> averages = new HashMap<>();
+        averages.put("averageLikes", averageLikes);
+        averages.put("averageDislikes", averageDislikes);
+
+        return new ResponseEntity<>(averages, HttpStatus.OK);
+    }
+
 }

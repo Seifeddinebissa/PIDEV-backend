@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.gestionforum_discussion.entities.Forumm;
 import tn.esprit.gestionforum_discussion.repositories.ForumRepository;
 import tn.esprit.gestionforum_discussion.services.ForumService;
@@ -33,19 +34,19 @@ public class ForumController {
         return new ResponseEntity<>(forumService.getForumById(id), HttpStatus.OK);
 
     }
-    @PostMapping("/add")
+    @PostMapping( "/add")
     public ResponseEntity<Forumm> AddForum(@RequestParam("title") String title,
                                            @RequestParam("content") String content,
                                            @RequestParam("likes") int likes,
-                                           @RequestParam("datePosted") String datePosted)/*,
-                                              @RequestParam(value = "image", required = false) MultipartFile image)*/ {
+                                           @RequestParam("datePosted") String datePosted,
+                                              @RequestParam("image") MultipartFile image) {
         try {
             Forumm forumm = new Forumm();
             forumm.setTitle(title);
             forumm.setContent(content);
             forumm.setLikes(likes);
             forumm.setDatePosted(LocalDate.parse(datePosted));
-
+            forumm.setImage(image.getBytes());
 
 
             Forumm savedForumm = forumRepository.save(forumm);
@@ -81,4 +82,5 @@ public class ForumController {
     public List<Forumm> searchForums(@RequestParam String title) {
         return forumService.searchForumsByTitle(title);
     }
+
 }

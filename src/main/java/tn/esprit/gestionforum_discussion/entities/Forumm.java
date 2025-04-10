@@ -13,16 +13,17 @@ public class Forumm {
     private String title;
     private String content;
     private int likes;
-    private String image;
-
-    private LocalDate datePosted;
+    @Lob
+    private byte[] image;
+    @Column(nullable = false, updatable = false)
+    private LocalDate datePosted = LocalDate.now();
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Commentaire> commentaires;
 
     public Forumm() {
     }
 
-    public Forumm(Long id, String title, String content, int likes, String image, LocalDate datePosted, Set<Commentaire> commentaires) {
+    public Forumm(Long id, String title, String content, int likes, byte[] image, LocalDate datePosted, Set<Commentaire> commentaires) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -64,11 +65,11 @@ public class Forumm {
         this.likes = likes;
     }
 
-    public String getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 

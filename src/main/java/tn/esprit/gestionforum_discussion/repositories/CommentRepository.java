@@ -11,5 +11,7 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Commentaire, Long> {
     List<Commentaire> findByForummId(Long forumId);
-    //Page<Commentaire> findByForumId(Long forumId, Pageable pageable);
+
+
+
 }

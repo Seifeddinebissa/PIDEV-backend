@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface ForumRepository extends JpaRepository<Forumm, Long> {
     List<Forumm> findByTitleContainingIgnoreCase(String title);
+
 }
