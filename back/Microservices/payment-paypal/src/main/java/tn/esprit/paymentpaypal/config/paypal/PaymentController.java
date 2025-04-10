@@ -24,8 +24,8 @@ public class PaymentController {
     @PostMapping("/payment/create")
     public RedirectView createPayment() {
         try {
-            String cancelUrl="http://localhost:8080/payment/cancel";
-            String successUrl="http://localhost:8080/payment/success";
+            String cancelUrl="http://localhost:8081/payment/cancel";
+            String successUrl="http://localhost:8081/payment/success";
             Payment payment = paypalService.createPayment(
                     10.0,
                     "USD",

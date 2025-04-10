@@ -2,8 +2,6 @@ package tne.sprit.gestion_user.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,7 +20,10 @@ import tne.sprit.gestion_user.services.UserDetailsServiceImpl;
 import tne.sprit.gestion_user.utils.JwtUtil;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -35,17 +36,15 @@ public class AuthController {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
-    private final JavaMailSender mailSender;
 
     public AuthController(AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailsService,
-                          UserRepository userRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder,RoleRepository roleRepository, JavaMailSender mailSender) {
+                          UserRepository userRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder,RoleRepository roleRepository) {
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
-        this.mailSender = mailSender;
     }
 
     @PostMapping("/login")
@@ -194,46 +193,6 @@ public class AuthController {
             UserDTO userDTO = new UserDTO(uByEmail);
             return new ResponseEntity<>(userDTO, HttpStatus.OK);
         }
-    }
-    @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@RequestParam("email") String email) {
-        // Find the user by email
-        User user = userRepository.findByEmail(email);
-        System.out.println(user.getEmail());
-        // Generate a password reset token using JwtUtil
-        String token = jwtUtil.generatePasswordResetToken(user.getId());
-
-        // Send the email with the reset link
-        String resetLink = "http://localhost:4200/reset-password?token=" + token;
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject("Password Reset Request");
-        message.setText("To reset your password, click the link below:\n" + resetLink + "\nThis link will expire in 1 hour.");
-        mailSender.send(message);
-
-        return ResponseEntity.ok(Map.of("message", "Password reset email sent successfully"));
-    }
-
-    @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestParam("token") String token,
-                                           @RequestParam("newPassword") String newPassword) {
-        // Validate the token using the new method
-        if (!jwtUtil.validatePasswordResetToken(token)) {
-            return ResponseEntity.status(400).body("Invalid or expired token");
-        }
-
-        // Extract the user ID from the token
-        Long userId = jwtUtil.extractUserId(token);
-
-        // Find the user by ID
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
-
-        // Update the user's password
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
-
-        return ResponseEntity.ok(Map.of("message", "Password reset successfully"));
     }
 }
 
