@@ -13,9 +13,11 @@ public class Application {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long studentId; // Static student ID
+    private Long studentId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private String status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "offre_id")
     private Offre offre;
 }

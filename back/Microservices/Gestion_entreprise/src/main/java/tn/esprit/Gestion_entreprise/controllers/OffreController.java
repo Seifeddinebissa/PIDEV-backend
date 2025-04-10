@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.Gestion_entreprise.entities.Application;
 import tn.esprit.Gestion_entreprise.entities.Offre;
 import tn.esprit.Gestion_entreprise.services.OffreService;
+import tn.esprit.Gestion_entreprise.repositories.ApplicationRepo;
 
 import java.util.List;
 
@@ -18,10 +19,17 @@ import java.util.List;
 public class OffreController {
 
     private final OffreService offreService;
+    private final ApplicationRepo applicationRepo;
 
     @PostMapping
     public ResponseEntity<Offre> createOffre(@RequestBody Offre offre) {
-        return ResponseEntity.ok(offreService.addOffre(offre));
+        try {
+            return ResponseEntity.ok(offreService.addOffre(offre));
+        } catch (Exception e) {
+            e.printStackTrace(); // Or use a logger
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null); // Or return a custom error message
+        }
     }
 
     @PutMapping("/update/{id}")
@@ -108,5 +116,36 @@ public class OffreController {
     ) {
         return ResponseEntity.ok(offreService.getFavoriteAnalytics(limit));
     }
+    @PutMapping("/applications/{id}/status")
+    public ResponseEntity<String> updateApplicationStatus(@PathVariable Long id, @RequestBody StatusRequest request) {
+        try {
+            offreService.updateApplicationStatus(id, request.getStatus());
+            return ResponseEntity.ok("Application status updated successfully");
+        } catch (Exception e) {
+            System.err.println("Error updating application status: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating application");
+        }
+    }
+
+    static class StatusRequest {
+        private String status;
+
+        public String getStatus() { return status; }
+        public void setStatus(String status) { this.status = status; }
+    }
+    @DeleteMapping("/applications/{id}")
+    public ResponseEntity<?> deleteApplication(@PathVariable Long id) {
+        try {
+            applicationRepo.deleteById(id); // ✅ use the instance you autowired
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace(); // Optional: for debugging
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Could not delete application");
+        }
+    }
+
+
 
 }
+
+

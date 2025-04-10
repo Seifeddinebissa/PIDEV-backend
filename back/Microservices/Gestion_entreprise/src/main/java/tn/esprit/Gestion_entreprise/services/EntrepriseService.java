@@ -36,11 +36,13 @@ public class EntrepriseService {
         return EntrepriseRepo.findById(id).orElse(null);
     }
 
-    public Entreprise saveCompany(String name, String sector, String location, String email, String phone, String website, MultipartFile logo) throws IOException {
+    public Entreprise saveCompany(String name, String sector, String location, Number latitude,  Number longitude, String email, String phone, String website, MultipartFile logo) throws IOException {
         Entreprise entreprise = new Entreprise();
         entreprise.setName(name);
         entreprise.setSector(sector);
         entreprise.setLocation(location);
+        entreprise.setLatitude(latitude.doubleValue());
+        entreprise.setLongitude(longitude.doubleValue());
         entreprise.setEmail(email);
         entreprise.setPhone(phone);
         entreprise.setWebsite(website);
@@ -57,7 +59,7 @@ public class EntrepriseService {
     }
 
 
-    public Entreprise updateCompany(Long id, String name, String sector, String location, String description, String email, String phone, String website, MultipartFile logo) throws IOException {
+    public Entreprise updateCompany(Long id, String name, String sector, String location, Number latitude,  Number longitude, String description, String email, String phone, String website, MultipartFile logo) throws IOException {
         Optional<Entreprise> existingEntrepriseOpt = EntrepriseRepo.findById(id);
 
         if (existingEntrepriseOpt.isPresent()) {
@@ -66,6 +68,8 @@ public class EntrepriseService {
             existingEntreprise.setName(name);
             existingEntreprise.setSector(sector);
             existingEntreprise.setLocation(location);
+            existingEntreprise.setLatitude(latitude.doubleValue());
+            existingEntreprise.setLongitude(longitude.doubleValue());
             existingEntreprise.setDescription(description);
             existingEntreprise.setEmail(email);
             existingEntreprise.setPhone(phone);

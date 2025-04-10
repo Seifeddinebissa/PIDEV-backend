@@ -24,6 +24,13 @@ public class Entreprise {
     private String website;
     private String logo;
 
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longitude")
+    private Double longitude;
+
+
 
     @OneToMany(mappedBy = "entreprise", cascade = CascadeType.ALL)
     @JsonIgnore

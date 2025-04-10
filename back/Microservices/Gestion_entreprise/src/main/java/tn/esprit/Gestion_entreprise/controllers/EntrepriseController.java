@@ -31,6 +31,8 @@ public class EntrepriseController {
             @RequestParam("name") String name,
             @RequestParam(value = "sector", required = false) String sector,
             @RequestParam(value = "location", required = false) String location,
+            @RequestParam(value = "latitude", required = false) Number latitude,
+            @RequestParam(value = "longitude", required = false) Number longitude,
             @RequestParam(value = "description", required = false) String description,
             @RequestParam(value = "email", required = false) String email,
             @RequestParam(value = "phone", required = false) String phone,
@@ -38,7 +40,7 @@ public class EntrepriseController {
             @RequestParam(value = "logo", required = false) MultipartFile logo
     ) {
         try {
-            Entreprise updatedEntreprise = EntrepriseService.updateCompany(id, name, sector, location, description, email, phone, website, logo);
+            Entreprise updatedEntreprise = EntrepriseService.updateCompany(id, name, sector, location, latitude, longitude, description, email, phone, website, logo);
             return ResponseEntity.ok(updatedEntreprise);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
@@ -56,13 +58,16 @@ public class EntrepriseController {
             @RequestParam("name") String name,
             @RequestParam(value = "sector", required = false) String sector,
             @RequestParam(value = "location", required = false) String location,
+            @RequestParam(value = "latitude", required = false) Number latitude,
+            @RequestParam(value = "longitude", required = false) Number longitude,
             @RequestParam(value = "email", required = false) String email,
             @RequestParam(value = "phone", required = false) String phone,
             @RequestParam(value = "website", required = false) String website,
             @RequestParam(value = "logo", required = false) MultipartFile logo
+
     ) {
         try {
-            Entreprise entreprise = EntrepriseService.saveCompany(name, sector, location, email, phone, website, logo);
+            Entreprise entreprise = EntrepriseService.saveCompany(name, sector, location, latitude, longitude,  email, phone, website, logo);
             return ResponseEntity.ok(entreprise);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);

@@ -33,6 +33,7 @@ public class OffreService {
     private final OffreRepo offreRepo;
     private final ApplicationRepo ApplicationRepo;
     private final FavoriteRepo FavoriteRepo;
+
     private static final Logger log = LoggerFactory.getLogger(OffreService.class);
     @PersistenceContext
     private EntityManager entityManager;
@@ -179,11 +180,9 @@ public class OffreService {
     }
 
     public List<Offre> getOffresByEntrepriseId(Long entrepriseId) {
-        // Check if the Entreprise exists
         Optional<Entreprise> entrepriseOpt = EntrepriseRepo.findById(entrepriseId);
 
         if (entrepriseOpt.isPresent()) {
-            // If the Entreprise exists, find all offers associated with that Entreprise
             return offreRepo.findByEntrepriseId(entrepriseId);
         } else {
             throw new EntityNotFoundException("Entreprise not found with id: " + entrepriseId);
@@ -208,5 +207,26 @@ public class OffreService {
         public Offre getOffre() { return offre; }
         public int getFavoriteCount() { return favoriteCount; }
     }
+
+    @Transactional
+    public boolean updateApplicationStatus(Long applicationId, String status) {
+        Application application = ApplicationRepo.findById(applicationId)
+                .orElseThrow(() -> new EntityNotFoundException("Application not found with id: " + applicationId));
+
+        application.setStatus(status);
+        ApplicationRepo.save(application);
+        return true;
+    }
+
+    public void deleteApplication(Long id) {
+        ApplicationRepo.deleteById(id);
+    }
+
+
+
+
+
+
+
 
 }
