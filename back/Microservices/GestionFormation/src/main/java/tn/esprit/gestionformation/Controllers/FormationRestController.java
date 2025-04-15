@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/formations")
@@ -110,6 +111,25 @@ public class FormationRestController {
             return formation.getFeedbacks();
         }
         return new ArrayList<>();
+    }
+
+    // New endpoints for managing favorites
+    @PostMapping("/favorites/{userId}/{formationId}")
+    public ResponseEntity<String> addToFavorites(@PathVariable int userId, @PathVariable int formationId) {
+        formationService.addFormationToFavorites(userId, formationId);
+        return ResponseEntity.ok("Formation added to favorites");
+    }
+
+    @DeleteMapping("/favorites/{userId}/{formationId}")
+    public ResponseEntity<String> removeFromFavorites(@PathVariable int userId, @PathVariable int formationId) {
+        formationService.removeFormationFromFavorites(userId, formationId);
+        return ResponseEntity.ok("Formation removed from favorites");
+    }
+
+    @GetMapping("/favorites/{userId}")
+    public ResponseEntity<Set<Formation>> getFavorites(@PathVariable int userId) {
+        Set<Formation> favorites = formationService.getFavoriteFormations(userId);
+        return ResponseEntity.ok(favorites);
     }
 
     private String saveImage(MultipartFile image) {

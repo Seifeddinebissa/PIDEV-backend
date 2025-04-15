@@ -1,10 +1,12 @@
 package tn.esprit.gestionformation.Controllers;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tn.esprit.gestionformation.Config.EmailService; // Ajout de l’import
 import tn.esprit.gestionformation.Entities.Feedback;
 import tn.esprit.gestionformation.Entities.Formation;
 import tn.esprit.gestionformation.Services.FeedbackService;
@@ -24,9 +26,6 @@ public class FeedbackRestController {
     @Autowired
     private FormationService formationService;
 
-    @Autowired
-    private EmailService emailService; // Injection du service Email
-
     @GetMapping
     public List<Feedback> getAllFeedbacks() {
         return feedbackService.getAllFeedbacks();
@@ -44,13 +43,11 @@ public class FeedbackRestController {
             feedback.setFormation(formation);
             Feedback savedFeedback = feedbackService.saveFeedback(feedback);
 
-            // Envoi de l’email après ajout du feedback
-            String subject = "Nouveau commentaire sur " + formation.getTitle();
-            String text = "Un nouveau feedback a été ajouté :\n\n" +
-                    "Note : " + savedFeedback.getRating() + "/5\n" +
-                    "Commentaire : " + savedFeedback.getComment() + "\n" +
-                    "Date : " + savedFeedback.getDate();
-            emailService.sendEmail("bennarimohamed8@gmail.com", subject, text);
+            try {
+                feedbackService.sendFeedbackEmail(savedFeedback, formation, formation_id);
+            } catch (MessagingException e) {
+                System.err.println("Erreur lors de l'envoi de l'email : " + e.getMessage());
+            }
 
             return savedFeedback;
         }
@@ -77,5 +74,19 @@ public class FeedbackRestController {
     public ResponseEntity<List<Map<String, Object>>> getAllFormationsFeedbackStats() {
         List<Map<String, Object>> stats = feedbackService.getAllFormationsFeedbackStats();
         return ResponseEntity.ok(stats);
+    }
+
+    @GetMapping(value = "/stats/export/pdf", produces = "application/pdf")
+    public ResponseEntity<byte[]> exportStatsToPDF() throws Exception {
+        List<Map<String, Object>> stats = feedbackService.getAllFormationsFeedbackStats();
+        byte[] pdfBytes = feedbackService.generateFeedbackStatsPDF(stats);
+
+        // Préparer la réponse
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", "feedback-stats.pdf");
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
     }
 }
