@@ -20,6 +20,10 @@ public class GatewayApplication {
                .route("GestionFormation",
                         r->r.path("/api/**")
                                 .uri("http://localhost:8081")).
+
+                .route("gestion-paiement-notification",
+                        r->r.path("/api/**")
+                                .uri("lb://gestion-paiement-notification")).
                 build();
     }
 }
