@@ -48,7 +48,7 @@ public class JwtUtil {
                 .setSubject(userId.toString()) // Use user ID as the subject
                 .claim("type", "password-reset") // Add a claim to differentiate from auth tokens
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .setExpiration(new Date(System.currentTimeMillis() + 3600000))
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }

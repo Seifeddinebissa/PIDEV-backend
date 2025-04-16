@@ -67,15 +67,17 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestParam("username") String username,
-                                      @RequestParam("password") String password,
-                                      @RequestParam("email") String email,
-                                      @RequestParam("firstName") String firstName,
-                                      @RequestParam("lastName") String lastName,
-                                      @RequestParam("cin") String cin,
-                                      @RequestParam("address") String address,
-                                      @RequestParam("image") MultipartFile image,
-                                      @RequestParam("roles") String roles) throws IOException {
+    public ResponseEntity<Map<String, String>> register(
+            @RequestParam("username") String username,
+            @RequestParam("password") String password,
+            @RequestParam("email") String email,
+            @RequestParam("firstName") String firstName,
+            @RequestParam("lastName") String lastName,
+            @RequestParam("cin") String cin,
+            @RequestParam("address") String address,
+            @RequestParam("image") MultipartFile image,
+            @RequestParam("roles") String roles) throws IOException {
+
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
@@ -85,6 +87,7 @@ public class AuthController {
         user.setCin(cin);
         user.setAddress(address);
         user.setImage(image.getBytes());
+
         // Parse the roles from the comma-separated string and look up Role entities
         Set<Role> userRoles = Arrays.stream(roles.split(","))
                 .map(String::trim)
@@ -92,35 +95,51 @@ public class AuthController {
                         .orElseThrow(() -> new RuntimeException("Role not found: " + roleName)))
                 .collect(Collectors.toSet());
         user.setRoles(userRoles);
+
         userRepository.save(user);
-        return ResponseEntity.ok("User registered successfully");
+
+        // Create a JSON response
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "User registered successfully");
+
+        return ResponseEntity.ok(response); // This will automatically set Content-Type to application/json
     }
     @PutMapping("/update")
-    public ResponseEntity<?> update(@RequestParam("id") Long id,
-                                      @RequestParam("username") String username,
-                                      @RequestParam("email") String email,
-                                      @RequestParam("firstName") String firstName,
-                                      @RequestParam("lastName") String lastName,
-                                      @RequestParam("cin") String cin,
-                                      @RequestParam("address") String address,
-                                      @RequestParam("image") MultipartFile image) throws IOException {
-        User user = new User();
-        User u  = userRepository.findById(id).get();
-        user.setPassword(u.getPassword());
-        user.setId(id);
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setCin(cin);
-        user.setAddress(address);
-        user.setImage(image.getBytes());
-        // Parse the roles from the comma-separated string and look up Role entities
+    public ResponseEntity<Map<String, String>> update(
+            @RequestParam("id") Long id,
+            @RequestParam("username") String username,
+            @RequestParam("email") String email,
+            @RequestParam("firstName") String firstName,
+            @RequestParam("lastName") String lastName,
+            @RequestParam("cin") String cin,
+            @RequestParam("address") String address,
+            @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
 
-        userRepository.save(user);
-        return ResponseEntity.ok("User registered successfully");
+        // Fetch the existing user from the database
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+
+        // Update the fields of the existing user instead of creating a new one
+        existingUser.setUsername(username);
+        existingUser.setEmail(email);
+        existingUser.setFirstName(firstName);
+        existingUser.setLastName(lastName);
+        existingUser.setCin(cin);
+        existingUser.setAddress(address);
+
+        // Update the image only if a new one is provided
+        if (image != null && !image.isEmpty()) {
+            existingUser.setImage(image.getBytes());
+        } // If image is null, the existing image will remain unchanged
+
+        // Save the updated user
+        userRepository.save(existingUser);
+
+        // Return a JSON response
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "User updated successfully");
+        return ResponseEntity.ok(response);
     }
-
     @GetMapping("/profile")
     public ResponseEntity<UserDTO> getProfile() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -142,20 +161,24 @@ public class AuthController {
         return ResponseEntity.ok(ud);
     }
     @PutMapping("/block")
-    public ResponseEntity<?> block(@RequestParam("id") Long id) {
+    public ResponseEntity<Map<String, String>> block(@RequestParam("id") Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
         user.setAccountLocked(true);
         userRepository.save(user);
-        return ResponseEntity.ok("User blocked successfully");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "User blocked successfully");
+        return ResponseEntity.ok(response);
     }
     @PutMapping("/unblock")
-    public ResponseEntity<?> unblock(@RequestParam("id") Long id) {
+    public ResponseEntity<Map<String, String>> unblock(@RequestParam("id") Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
         user.setAccountLocked(false);
         userRepository.save(user);
-        return ResponseEntity.ok("User blocked successfully");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "User blocked successfully");
+        return ResponseEntity.ok(response);
     }
     @PutMapping("/update-password")
     public ResponseEntity<?> updatePassword(@RequestParam("id") Long id,
