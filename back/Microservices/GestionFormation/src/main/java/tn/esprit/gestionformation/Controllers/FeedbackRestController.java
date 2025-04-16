@@ -37,21 +37,21 @@ public class FeedbackRestController {
     }
 
     @PostMapping
-    public Feedback createFeedback(@RequestBody Feedback feedback, @RequestParam int formation_id) {
-        Formation formation = formationService.getFormationById(formation_id);
-        if (formation != null) {
-            feedback.setFormation(formation);
-            Feedback savedFeedback = feedbackService.saveFeedback(feedback);
-
+    public ResponseEntity<Feedback> createFeedback(
+            @RequestBody Feedback feedback,
+            @RequestParam int formation_id,
+            @RequestParam int user_id) {
+        Feedback savedFeedback = feedbackService.saveFeedbackWithUser(feedback, user_id, formation_id);
+        if (savedFeedback != null) {
+            Formation formation = formationService.getFormationById(formation_id);
             try {
                 feedbackService.sendFeedbackEmail(savedFeedback, formation, formation_id);
             } catch (MessagingException e) {
                 System.err.println("Erreur lors de l'envoi de l'email : " + e.getMessage());
             }
-
-            return savedFeedback;
+            return ResponseEntity.ok(savedFeedback);
         }
-        return null;
+        return ResponseEntity.badRequest().build();
     }
 
     @DeleteMapping("/{id}")
@@ -70,6 +70,17 @@ public class FeedbackRestController {
         return ResponseEntity.ok(feedbacks);
     }
 
+    @GetMapping("/check")
+    public ResponseEntity<Feedback> checkFeedbackExists(
+            @RequestParam int userId,
+            @RequestParam int formationId) {
+        Feedback feedback = feedbackService.checkFeedbackExists(userId, formationId);
+        if (feedback != null) {
+            return ResponseEntity.ok(feedback);
+        }
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/stats")
     public ResponseEntity<List<Map<String, Object>>> getAllFormationsFeedbackStats() {
         List<Map<String, Object>> stats = feedbackService.getAllFormationsFeedbackStats();
@@ -81,7 +92,6 @@ public class FeedbackRestController {
         List<Map<String, Object>> stats = feedbackService.getAllFormationsFeedbackStats();
         byte[] pdfBytes = feedbackService.generateFeedbackStatsPDF(stats);
 
-        // Préparer la réponse
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         headers.setContentDispositionFormData("attachment", "feedback-stats.pdf");

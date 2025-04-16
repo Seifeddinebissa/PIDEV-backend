@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+
 import java.util.Date;
 
 @Entity
@@ -28,9 +29,12 @@ public class Feedback {
 
     @ManyToOne
     @JsonIgnore
-    Formation formation;
+    private Formation formation;
 
-    // New attribute: is_hidden
+    @ManyToOne
+    @JsonIgnore
+    private User user; // Added to associate feedback with a user
+
     private boolean is_hidden;
 
     public Feedback() {
@@ -51,6 +55,8 @@ public class Feedback {
         this.formation = formation;
         this.is_hidden = is_hidden;
     }
+
+    // Existing getters and setters...
 
     public int getId() {
         return id;
@@ -92,13 +98,21 @@ public class Feedback {
         this.formation = formation;
     }
 
-    // Getter and Setter for is_hidden
     public boolean isIs_hidden() {
         return is_hidden;
     }
 
     public void setIs_hidden(boolean is_hidden) {
         this.is_hidden = is_hidden;
+    }
+
+    // Getter and Setter for user
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
@@ -109,6 +123,7 @@ public class Feedback {
                 ", comment='" + comment + '\'' +
                 ", date=" + date +
                 ", is_hidden=" + is_hidden +
+                ", user=" + (user != null ? user.getId() : "null") +
                 '}';
     }
 }

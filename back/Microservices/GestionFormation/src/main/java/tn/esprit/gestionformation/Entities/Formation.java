@@ -46,8 +46,6 @@ public class Formation {
     @JsonIgnore
     private Set<User> usersWhoFavorited = new HashSet<>();
 
-    // Existing methods...
-
     public List<Feedback> getFeedbacks() {
         return feedbacks;
     }

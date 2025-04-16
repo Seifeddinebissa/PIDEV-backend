@@ -12,6 +12,7 @@ import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import org.springframework.core.io.ClassPathResource;
 import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.borders.SolidBorder;
@@ -24,19 +25,21 @@ import com.itextpdf.layout.properties.UnitValue;
 import com.itextpdf.layout.properties.VerticalAlignment;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import tn.esprit.gestionformation.Config.EmailService;
 import tn.esprit.gestionformation.Entities.Feedback;
 import tn.esprit.gestionformation.Entities.Formation;
+import tn.esprit.gestionformation.Entities.User;
 import tn.esprit.gestionformation.Repositories.FeedbackRepository;
 import tn.esprit.gestionformation.Repositories.FormationRepository;
+import tn.esprit.gestionformation.Repositories.UserRepository;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,6 +50,9 @@ public class FeedbackService {
 
     @Autowired
     private FormationRepository formationRepository;
+
+    @Autowired
+    private UserRepository userRepository; // Added to fetch user
 
     @Autowired
     private EmailService emailService;
@@ -81,6 +87,38 @@ public class FeedbackService {
         return feedbackRepository.findNonHiddenByFormationId(formationId);
     }
 
+    // Added method to check if feedback exists for a user and formation
+    public Feedback checkFeedbackExists(int userId, int formationId) {
+        Optional<Feedback> feedback = feedbackRepository.findByUserIdAndFormationId(userId, formationId);
+        return feedback.orElse(null);
+    }
+
+    // Modified method to save feedback with user and formation
+    public Feedback saveFeedbackWithUser(Feedback feedback, int userId, int formationId) {
+        // Check if feedback already exists for this user and formation
+        Feedback existingFeedback = checkFeedbackExists(userId, formationId);
+        if (existingFeedback != null) {
+            // Update the existing feedback
+            existingFeedback.setRating(feedback.getRating());
+            existingFeedback.setComment(feedback.getComment());
+            existingFeedback.setDate(feedback.getDate());
+            existingFeedback.setIs_hidden(feedback.isIs_hidden());
+            return feedbackRepository.save(existingFeedback);
+        } else {
+            // Create new feedback
+            Formation formation = formationRepository.findById(formationId).orElse(null);
+            User user = userRepository.findById(userId).orElse(null);
+            if (formation != null && user != null) {
+                feedback.setFormation(formation);
+                feedback.setUser(user);
+                return feedbackRepository.save(feedback);
+            }
+            return null;
+        }
+    }
+
+    // Existing methods...
+
     public List<Map<String, Object>> getAllFormationsFeedbackStats() {
         try {
             List<Formation> formations = formationRepository.findAll();
@@ -89,7 +127,6 @@ public class FeedbackService {
                 return Collections.emptyList();
             }
 
-            // Calculer les stats pour chaque formation
             List<Map<String, Object>> allStats = formations.stream().map(formation -> {
                 List<Feedback> feedbacks = feedbackRepository.findNonHiddenByFormationId(formation.getId());
                 Map<String, Object> stats = new HashMap<>();
@@ -125,7 +162,6 @@ public class FeedbackService {
                 return stats;
             }).collect(Collectors.toList());
 
-            // Filtrer pour ne garder que les formations avec totalFeedbacks > 0
             return allStats.stream()
                     .filter(stat -> (int) stat.get("totalFeedbacks") > 0)
                     .collect(Collectors.toList());
@@ -135,11 +171,9 @@ public class FeedbackService {
         }
     }
 
-    // New method to send email
     public void sendFeedbackEmail(Feedback feedback, Formation formation, int formationId) throws MessagingException {
         String subject = "Nouveau commentaire sur " + formation.getTitle();
 
-        // Template HTML
         String htmlContent = String.format(
                 """
                 <!DOCTYPE html>
@@ -313,7 +347,6 @@ public class FeedbackService {
         emailService.sendEmail("bennarimohamed8@gmail.com", subject, htmlContent);
     }
 
-    // New method to generate PDF
     public byte[] generateFeedbackStatsPDF(List<Map<String, Object>> stats) throws Exception {
         // Créer un document PDF avec des marges personnalisées
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -549,4 +582,5 @@ public class FeedbackService {
                 .replace("\"", "&quot;")
                 .replace("'", "&#39;");
     }
+
 }
