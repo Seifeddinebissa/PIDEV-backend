@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="gestion_user" />
+        <module name="Gestion_entreprise" />
         <module name="eureka" />
         <module name="gateway" />
         <module name="GestionFormation" />
@@ -28,6 +29,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="GestionCourse" options="-parameters" />
       <module name="GestionFormation" options="-parameters" />
+      <module name="Gestion_entreprise" options="-parameters" />
       <module name="eureka" options="-parameters" />
       <module name="gateway" options="-parameters" />
       <module name="gestion_user" options="-parameters" />

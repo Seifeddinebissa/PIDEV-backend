@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 
+import static org.springframework.web.reactive.function.server.RouterFunctions.route;
+
 @EnableDiscoveryClient
 @SpringBootApplication
 public class GatewayApplication {
@@ -19,7 +21,7 @@ public class GatewayApplication {
         return builder.routes()
                .route("GestionFormation",
                         r->r.path("/api/**")
-                                .uri("http://localhost:8081")).
+                                .uri("http://localhost:8081"))
 
                 .route("gestion-paiement-notification",
                         r->r.path("/api/**")
