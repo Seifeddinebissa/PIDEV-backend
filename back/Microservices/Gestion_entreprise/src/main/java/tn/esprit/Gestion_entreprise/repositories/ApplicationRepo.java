@@ -6,5 +6,5 @@ import tn.esprit.Gestion_entreprise.entities.Application;
 import java.util.Optional;
 
 public interface ApplicationRepo extends JpaRepository<Application, Long> {
-    Optional<Application> findById(Long studentId);
+    Optional<Application> findById(Long id);
 }
