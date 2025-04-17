@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface OffreRepo extends JpaRepository<Offre, Long> {
     List<Offre> findByEntrepriseId(Long entrepriseId);
+
 }

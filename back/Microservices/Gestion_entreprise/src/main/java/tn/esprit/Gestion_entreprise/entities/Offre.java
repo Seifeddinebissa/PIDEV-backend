@@ -40,4 +40,5 @@ public class Offre {
     @OneToMany(mappedBy = "offre", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Favorite> favorites;
 
+
 }

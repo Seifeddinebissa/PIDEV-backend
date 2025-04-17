@@ -20,4 +20,6 @@ public class Application {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "offre_id")
     private Offre offre;
+    @OneToOne(mappedBy = "application", cascade = CascadeType.ALL)
+    private Appointment appointment;
 }
