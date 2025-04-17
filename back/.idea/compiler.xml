@@ -7,9 +7,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="gestion_user" />
         <module name="eureka" />
         <module name="gateway" />
         <module name="GestionFormation" />
+        <module name="payment-paypal" />
       </profile>
       <profile name="Annotation profile for GestionCourse" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -28,6 +30,8 @@
       <module name="GestionFormation" options="-parameters" />
       <module name="eureka" options="-parameters" />
       <module name="gateway" options="-parameters" />
+      <module name="gestion_user" options="-parameters" />
+      <module name="payment-paypal" options="-parameters" />
     </option>
   </component>
 </project>

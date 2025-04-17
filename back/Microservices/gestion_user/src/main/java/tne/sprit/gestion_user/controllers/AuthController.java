@@ -153,6 +153,7 @@ public class AuthController {
         return ResponseEntity.ok(user.getImage());
     }
 
+
     @GetMapping("/all")
     public ResponseEntity<List<UserDTO>> getAll() {
         List<User> u = userRepository.findAll();
@@ -160,6 +161,13 @@ public class AuthController {
         System.out.println(ud);
         return ResponseEntity.ok(ud);
     }
+
+    @GetMapping("/get-by-id/{id}")
+    public ResponseEntity<UserDTO> getById(@PathVariable Long id) {
+        User user = userRepository.findById(id).get();
+        return ResponseEntity.ok(new UserDTO(user));
+    }
+
     @PutMapping("/block")
     public ResponseEntity<Map<String, String>> block(@RequestParam("id") Long id) {
         User user = userRepository.findById(id)
@@ -258,6 +266,8 @@ public class AuthController {
 
         return ResponseEntity.ok(Map.of("message", "Password reset successfully"));
     }
+
+
 }
 
 
