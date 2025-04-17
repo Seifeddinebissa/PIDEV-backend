@@ -7,9 +7,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="Chat" />
         <module name="GestionForum_Discussion" />
         <module name="eureka" />
         <module name="gateway" />
+        <module name="websocket-project" />
       </profile>
       <profile name="Annotation profile for GestionCourse" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -24,10 +26,12 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Chat" options="-parameters" />
       <module name="GestionCourse" options="-parameters" />
       <module name="GestionForum_Discussion" options="-parameters" />
       <module name="eureka" options="-parameters" />
       <module name="gateway" options="-parameters" />
+      <module name="websocket-project" options="-parameters" />
     </option>
   </component>
 </project>

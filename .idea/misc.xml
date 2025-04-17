@@ -8,6 +8,9 @@
         <option value="$PROJECT_DIR$/Microservices/gateway/pom.xml" />
         <option value="$PROJECT_DIR$/Microservices/GestionForum_Discussion/pom.xml" />
         <option value="$PROJECT_DIR$/Microservices/GestionCourse/pom.xml" />
+        <option value="$PROJECT_DIR$/Microservices/eureka/Chat/pom.xml" />
+        <option value="$PROJECT_DIR$/Microservices/Chat/websocket/pom.xml" />
+        <option value="$PROJECT_DIR$/Microservices/Chat/pom.xml" />
       </list>
     </option>
   </component>
