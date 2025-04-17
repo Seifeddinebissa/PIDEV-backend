@@ -17,6 +17,10 @@ public class GatewayApplication {
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
+               .route("GestionFormation",
+                        r->r.path("/api/**")
+                                .uri("http://localhost:8081")).
+
                 .route("gestion-paiement-notification",
                         r->r.path("/api/**")
                                 .uri("lb://gestion-paiement-notification")).

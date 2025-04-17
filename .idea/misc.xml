@@ -11,7 +11,6 @@
         <option value="$PROJECT_DIR$/back/eureka/pom.xml" />
         <option value="$PROJECT_DIR$/back/Microservices/gestion-paiement-notification/pom.xml" />
         <option value="$PROJECT_DIR$/back/Microservices/GestionCourse/pom.xml" />
-        <option value="$PROJECT_DIR$/back/Microservices/Gestion_entreprise/pom.xml" />
       </list>
     </option>
   </component>
